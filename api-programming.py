@@ -141,6 +141,17 @@ def delete_book(book_id):
             }
         ), HTTPStatus.NOT_FOUND
 
+    books.remove(book)
+    
+    return jsonify(
+        {
+            "success": True,
+            "message": f"Book with id {book_id} deleted successfully",
+            "deleted_book": book  
+        }
+    ), HTTPStatus.OK
+
+
 @app.errorhandler(404)
 def not_found(error):
     return jsonify(
