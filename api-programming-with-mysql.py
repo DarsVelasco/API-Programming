@@ -60,3 +60,15 @@ def create_book():
                 "error": "Content-type must be application/json"
             }
         ), HTTPStatus.BAD_REQUEST
+
+    data = request.get_json()
+    
+    required_fields = ["title", "author", "year"]
+    for field in required_fields:
+        if field not in data:
+            return jsonify(
+                {
+                    "success": False,
+                    "errors": f"Missing required fields: {field}",
+                }
+            ), HTTPStatus.BAD_REQUEST
