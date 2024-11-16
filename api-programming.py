@@ -119,6 +119,15 @@ def update_book(book_id):
                 "error": "Invalid value for 'year'"
             }
         ), HTTPStatus.BAD_REQUEST
+    
+    book.update(updates)
+
+    return jsonify(
+        {
+            "success": True,
+            "data": book
+        }
+    ), HTTPStatus.OK
 
 @app.errorhandler(404)
 def not_found(error):
