@@ -132,3 +132,26 @@ def update_book(book_id):
             "data": book.to_dict()
         }
     ), HTTPStatus.OK
+
+@app.route("/api/books/<int:book_id>", methods=["DELETE"])
+def delete_book(book_id):
+    book = Book.query.get(book_id)
+    
+    if book is None:
+        return jsonify(
+            {
+                "success": False,
+                "error": "Book not found"
+            }
+        ), HTTPStatus.NOT_FOUND
+
+    db.session.delete(book)
+    db.session.commit()
+    
+    return jsonify(
+        {
+            "success": True,
+            "message": f"Book with id {book_id} deleted successfully",
+            "deleted_book": book.to_dict()  
+        }
+    ), HTTPStatus.OK
