@@ -101,6 +101,14 @@ def update_book(book_id):
 
     data = request.get_json()
 
+    if not data:
+        return jsonify(
+            {
+                "success": False,
+                "error": "No data provided for update"
+            }
+        ), HTTPStatus.BAD_REQUEST
+
 
 @app.errorhandler(404)
 def not_found(error):
