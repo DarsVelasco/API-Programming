@@ -129,6 +129,18 @@ def update_book(book_id):
         }
     ), HTTPStatus.OK
 
+@app.route("/api/books/<int:book_id>", methods=["DELETE"])
+def delete_book(book_id):
+    book = find_book(book_id)
+    
+    if book is None:
+        return jsonify(
+            {
+                "success": False,
+                "error": "Book not found"
+            }
+        ), HTTPStatus.NOT_FOUND
+
 @app.errorhandler(404)
 def not_found(error):
     return jsonify(
