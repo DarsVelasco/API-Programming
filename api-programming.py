@@ -109,6 +109,16 @@ def update_book(book_id):
             }
         ), HTTPStatus.BAD_REQUEST
 
+    allowed_keys = {"title", "author", "year"}
+    updates = {key: data[key] for key in data if key in allowed_keys}
+
+    if "year" in updates and (not isinstance(updates["year"], int) or updates["year"] <= 0):
+        return jsonify(
+            {
+                "success": False,
+                "error": "Invalid value for 'year'"
+            }
+        ), HTTPStatus.BAD_REQUEST
 
 @app.errorhandler(404)
 def not_found(error):
