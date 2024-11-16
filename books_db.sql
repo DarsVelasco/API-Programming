@@ -1,0 +1,8 @@
+CREATE DATABASE books_db;
+USE books_db;
+CREATE TABLE books (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(200) NOT NULL,
+    author VARCHAR(100) NOT NULL,
+    year INT NOT NULL
+);
