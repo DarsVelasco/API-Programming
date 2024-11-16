@@ -26,3 +26,8 @@ class Book(db.Model):
 @app.before_first_request
 def create_tables():
     db.create_all()
+
+@app.route("/api/books", methods=["GET"])
+def get_books():
+    books = Book.query.all()
+    return jsonify({"success": True, "data": [book.to_dict() for book in books], "total": len(books)}), HTTPStatus.OK
