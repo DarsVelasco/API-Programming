@@ -22,3 +22,7 @@ class Book(db.Model):
             "author": self.author,
             "year": self.year
         }
+    
+@app.before_first_request
+def create_tables():
+    db.create_all()
