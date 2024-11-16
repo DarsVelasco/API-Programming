@@ -4,7 +4,7 @@ from http import HTTPStatus
 
 app = Flask(__name__)
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://username:password@localhost/books_db"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://root:root@localhost/books_db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
@@ -22,9 +22,8 @@ class Book(db.Model):
             "author": self.author,
             "year": self.year
         }
-    
-@app.before_first_request
-def create_tables():
+
+with app.app_context():
     db.create_all()
 
 @app.route("/api/books", methods=["GET"])
@@ -69,7 +68,7 @@ def create_book():
             return jsonify(
                 {
                     "success": False,
-                    "errors": f"Missing required fields: {field}",
+                    "error": f"Missing required field: {field}",
                 }
             ), HTTPStatus.BAD_REQUEST
         
@@ -116,7 +115,7 @@ def update_book(book_id):
         if key in allowed_keys:
             setattr(book, key, data[key])
 
-    if "year" in data and (not isinstance(book.year, int) or book.year <= 0):
+    if "year" in data and (not isinstance(data["year"], int) or data["year"] <= 0):
         return jsonify(
             {
                 "success": False,
@@ -155,7 +154,6 @@ def delete_book(book_id):
             "deleted_book": book.to_dict()  
         }
     ), HTTPStatus.OK
-
 
 @app.errorhandler(404)
 def not_found(error):
