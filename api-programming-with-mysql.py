@@ -88,3 +88,47 @@ def create_book():
             "data": new_book.to_dict(),
         }
     ), HTTPStatus.CREATED
+
+@app.route("/api/books/<int:book_id>", methods=["PUT"])
+def update_book(book_id):
+    book = Book.query.get(book_id)
+
+    if book is None:
+        return jsonify(
+            {
+                "success": False,
+                "error": "Book not found"
+            }
+        ), HTTPStatus.NOT_FOUND
+
+    data = request.get_json()
+
+    if not data:
+        return jsonify(
+            {
+                "success": False,
+                "error": "No data provided for update"
+            }
+        ), HTTPStatus.BAD_REQUEST
+    
+    allowed_keys = {"title", "author", "year"}
+    for key in data:
+        if key in allowed_keys:
+            setattr(book, key, data[key])
+
+    if "year" in data and (not isinstance(book.year, int) or book.year <= 0):
+        return jsonify(
+            {
+                "success": False,
+                "error": "Invalid value for 'year'"
+            }
+        ), HTTPStatus.BAD_REQUEST
+
+    db.session.commit()
+
+    return jsonify(
+        {
+            "success": True,
+            "data": book.to_dict()
+        }
+    ), HTTPStatus.OK
