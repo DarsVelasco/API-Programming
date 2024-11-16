@@ -72,3 +72,19 @@ def create_book():
                     "errors": f"Missing required fields: {field}",
                 }
             ), HTTPStatus.BAD_REQUEST
+        
+    new_book = Book(
+        title=data['title'],
+        author=data['author'],
+        year=data['year']
+    )
+    
+    db.session.add(new_book)
+    db.session.commit()
+
+    return jsonify(
+        {
+            "success": True,
+            "data": new_book.to_dict(),
+        }
+    ), HTTPStatus.CREATED
