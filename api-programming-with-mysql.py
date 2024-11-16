@@ -31,3 +31,22 @@ def create_tables():
 def get_books():
     books = Book.query.all()
     return jsonify({"success": True, "data": [book.to_dict() for book in books], "total": len(books)}), HTTPStatus.OK
+
+@app.route("/api/books/<int:book_id>", methods=["GET"])
+def get_book(book_id):
+    book = Book.query.get(book_id)
+    
+    if book is None:
+        return jsonify(
+            {
+                "success": False, 
+                "error": "Book not found"
+            }
+        ), HTTPStatus.NOT_FOUND
+    
+    return jsonify(
+        {
+            "success": True, 
+            "data": book.to_dict(),
+        }
+    ), HTTPStatus.OK
