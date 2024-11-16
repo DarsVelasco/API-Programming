@@ -50,3 +50,13 @@ def get_book(book_id):
             "data": book.to_dict(),
         }
     ), HTTPStatus.OK
+
+@app.route("/api/books", methods=["POST"])
+def create_book():
+    if not request.is_json:
+        return jsonify(
+            {
+                "success": False,
+                "error": "Content-type must be application/json"
+            }
+        ), HTTPStatus.BAD_REQUEST
