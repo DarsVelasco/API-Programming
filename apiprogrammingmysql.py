@@ -66,7 +66,7 @@ def create_book():
     for field in required_fields:
         if field not in data:
             return jsonify(
-                {
+                { 
                     "success": False,
                     "error": f"Missing required field: {field}",
                 }
